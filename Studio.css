@@ -1,0 +1,791 @@
+:root {
+  /* 라이트 테마 변수 (forgetoon 기본 감성인 화이트보드 룩) */
+  --bg-color: #f6f8fa;
+  --card-bg: #ffffff;
+  --sidebar-bg: #ffffff;
+  --text-color: #24292f;
+  --text-muted: #57606a;
+  --border-color: #d0d7de;
+  --input-bg: #f6f8fa;
+  --accent-color: #5865f2;
+  --accent-hover: #4752c4;
+  --danger-color: #f04747;
+  --danger-hover: #d83c3e;
+  --active-highlight: #eff1f5;
+  --cell-bg: #fafafa;
+}
+
+body.dark-theme {
+  /* 다크 테마 변수 전환 */
+  --bg-color: #1e1e1e;
+  --card-bg: #151726;
+  --sidebar-bg: #151726;
+  --text-color: #e3e5e8;
+  --text-muted: #8b949e;
+  --border-color: #2d3142;
+  --input-bg: #1e2035;
+  --active-highlight: #21243d;
+  --cell-bg: #111322;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+#app-container {
+  display: flex;
+  width: 100%;
+  height: 100vh; /* 부모 높이를 100vh로 강제 구속하여 자식들의 뷰포트 내 내부 스크롤 보장 */
+}
+
+/* ==========================================
+   좌측 사이드바 디자인 (forgetoon 플랫 스타일)
+   ========================================== */
+#sidebar {
+  width: 320px;
+  height: 100%; /* 부모 컨테이너 내에서 꽉 차도록 설정 */
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-sizing: border-box;
+  overflow-y: auto; /* 내부 스크롤 강제 활성화 */
+}
+
+
+
+/* ==========================================
+   기타 사이드바 공용 요소
+   ========================================== */
+.active-slot-indicator {
+  background-color: var(--border-color);
+  color: var(--text-muted);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+input[type="file"], select, input[type="text"] {
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  border-radius: 6px;
+  color: var(--text-color);
+  font-size: 0.82rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+#sidebar h2 {
+  margin: 8px 0 0 0;
+  font-size: 0.82rem; /* 텍스트 크기 조절: 한 줄 밀림 방지 적용 */
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#sidebar-footer {
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* 1. 기본 스타일 (모바일 우선 - 화면이 작을 때) */
+.footer-btn-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* 모바일: 한 줄로 1개씩 */
+  gap: 8px;
+  margin-bottom: 12px;
+}
+/* 2. 화면이 커질 때 (데스크탑/태블릿) */
+@media (min-width: 768px) {
+  .footer-btn-grid {
+    grid-template-columns: 1fr 1fr 1fr; /* 화면이 커지면 3개로 변신! */
+  }
+}
+
+/* ==========================================
+   좌측 스티커/로고 타이틀 레이아웃
+   ========================================== */
+/* 큰 버튼(텍스트) */
+.flat-footer-btn-G {
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  text-align: center;
+  font-weight: bold;
+}
+/* 작은 버튼(텍스트)font-weight: 600; display: flex;*/
+.flat-footer-btn {
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 9px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  align-items: right;  
+  gap: 8px;  
+}
+
+#build-info {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+  font-family: monospace;
+}
+
+/* ==========================================
+   우측 메인 콘텐츠 레이아웃
+   ========================================== */
+#main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  gap: 16px;
+  background-color: var(--bg-color);
+  overflow-y: auto; /* 기존 hidden에서 세로 스크롤 활성화로 변경 */
+}
+
+#space-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.card-header {
+  font-size: 0.82rem;
+  font-weight: bold;
+  color: var(--text-muted);
+  align-self: flex-start;
+  margin-bottom: 12px;
+}
+
+#canvas-container {
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 16/9;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  background-color: #000;
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 타임라인 제어 헤더 */
+#timeline-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 12px 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.info-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 페이드 레버 스타일 세트 */
+.fade-control-group, .fade-lever-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mini-lever {
+  width: 55px;
+  accent-color: var(--accent-color);
+  cursor: pointer;
+}
+
+.lever-val {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  width: 28px;
+}
+
+.badge {
+  background-color: var(--text-muted);
+  color: var(--card-bg);
+  font-size: 0.72rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.toggle-badge {
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 5px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.toggle-badge.active {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: white;
+}
+
+.info-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-right: 10px;
+}
+
+.control-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.volume-slider {
+  display: flex;
+  align-items: center;
+  color: var(--text-muted);
+}
+
+.volume-slider input[type="range"] {
+  width: 100px;
+  accent-color: var(--accent-color);
+}
+
+.btn-primary {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover { background-color: var(--accent-hover); }
+.btn-primary:disabled { background-color: var(--border-color); cursor: not-allowed; color: var(--text-muted); }
+
+.btn-danger {
+  background-color: var(--danger-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: background 0.2s;
+}
+
+.btn-danger:hover { background-color: var(--danger-hover); }
+
+/* ==========================================
+   기획안 준수 고급 테이블식 타임라인 구조
+   ========================================== */
+#timeline-card {
+  height: auto; /* 개변 높이 처리 완료: 처음엔 탭이 슬림했다가 트랙 추가 시 밑으로 유연하게 팽창 */
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.timeline-table-container {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--cell-bg);
+  overflow-y: auto;
+  max-height: 350px; /* 5개 이상 가동 시 내부 스크롤바 작동 */
+}
+
+.timeline-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* 컬럼별 명세 고정 */
+.col-track { width: 100px; font-weight: 800; background-color: var(--input-bg); }
+.col-image { width: 150px; }
+.col-audio { width: 180px; } /* 오디오 컬럼 단일화로 폭 확장 */
+.col-effect { width: 135px; }
+.col-spectrum { width: 135px; }
+.col-text { width: auto; }
+.col-arrow { width: 95px; text-align: center; }
+
+.timeline-table th {
+  background-color: var(--input-bg);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: bold;
+  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  padding: 10px;
+  text-align: center;
+}
+.timeline-table th:last-child { border-right: none; }
+
+.timeline-table td {
+  padding: 0;
+  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  height: 42px;
+  box-sizing: border-box;
+}
+.timeline-table td:last-child { border-right: none; }
+
+/* 액티브 행 하이라이트 */
+.timeline-row.active-row td {
+  background-color: var(--active-highlight);
+}
+.timeline-row.active-row td.cell-track-header {
+  border-left: 3px solid var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* 트랙 머리글 */
+.cell-track-header {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--text-muted);
+  text-align: center !important;
+  cursor: pointer;
+  background-color: var(--input-bg);
+}
+
+/* 직관적인 파일 바인딩 셸 */
+.cell-file-picker {
+  font-size: 0.78rem;
+  padding: 0 12px;
+  cursor: pointer;
+  color: var(--text-muted);
+  overflow: hidden;         /* 영역 밖으로 넘치면 자르기 */
+  text-overflow: ellipsis;  /* 넘치는 글자는 ...으로 표시 */
+  white-space: nowrap;      /* 강제로 줄바꿈 방지 */
+  vertical-align: middle;
+  text-align: center;
+  max-width: 150px;         /* 컬럼 폭에 맞춰 최대 너비 제한 */
+}
+.cell-file-picker.has-file {
+  font-weight: 600;
+}
+.cell-file-picker.has-file.image-type { color: #a855f7; }
+.cell-file-picker.has-file.audio-type { color: #10b981; }
+
+/* 테이블 내 인라인 드롭다운 */
+.cell-select {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  font-size: 0.78rem;
+  padding: 0 24px 0 8px; /* 화살표 아이콘 영역 확보 */
+  color: var(--text-color);
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  /* 커스텀 셀렉트 박스 화살표 디자인 리셋 */
+  background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+}
+
+/* 자막 인풋 텍스트 필드 */
+.cell-input-text {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  font-size: 0.78rem;
+  padding: 0 12px;
+  color: var(--text-color);
+  outline: none;
+}
+
+/* 추가 [+] 버튼에만 가득 차도록 단독 지정하여 삭제 버튼과의 충돌 완벽 해결 */
+.btn-row-add {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.btn-row-add:hover { color: var(--accent-color); }
+
+/* 삭제 버튼은 더이상 100% 너비를 쓰지 않고 자기 크기만 사용하도록 충돌 상속 원천 차단 */
+.btn-row-delete {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.15rem; /* 그림문자 ⊗ 크기 조절 */
+  padding: 0 2px;
+  display: inline-block;
+  vertical-align: middle;
+  outline: none;
+  transition: color 0.2s, opacity 0.2s;
+  width: auto; /* 명시적으로 자동 너비 지정하여 100% 상속 해제 */
+  height: auto;
+}
+.btn-row-delete:hover { color: var(--danger-color); }
+
+.cell-arrow-icon {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  user-select: none;
+}
+
+/* 글로벌 웹킷 스크롤바 커스텀 스타일 정의 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-muted);
+}
+
+#sidebar {
+  /* 기존 속성 유지 */
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* 이 간격이 사이드바 요소들의 균형을 맞춥니다 */
+}
+/* 중요: 사이드바 전용 스크롤바 트랙 - 유격 제거 완료 */
+#sidebar::-webkit-scrollbar-track {
+  background-color: var(--sidebar-bg) !important;
+}
+
+/* 중요: 우측 본문 전용 스크롤바 트랙 - 유격 제거 완료 */
+#main-content::-webkit-scrollbar-track {
+  background-color: var(--bg-color) !important;
+}
+
+/* 앞부분 스타일 코드군 모두 동일 보존 후 아래 선택기 추가 적용 */
+
+.mini-select {
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  padding: 4px 28px 4px 10px;
+  border-radius: 18px;
+  color: var(--text-color);
+  font-size: 0.75rem;
+  font-weight: bold;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+/* 글로벌 웹킷 스크롤바 커스텀 스타일 정의 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-muted);
+}
+
+#sidebar::-webkit-scrollbar-track {
+  background-color: var(--sidebar-bg) !important;
+}
+
+#main-content::-webkit-scrollbar-track {
+  background-color: var(--bg-color) !important;
+}
+
+/* 스티커 그리드 보드 구조 정의 신설 */
+.sticker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px;
+  background-color: var(--input-bg);
+  box-sizing: border-box;
+}
+
+.sticker-thumb {
+  aspect-ratio: 1/1;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: #ffffff; /* 투명도 식별을 위한 흰색 배경 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.sticker-thumb:hover, .sticker-thumb.selected-thumb {
+  border-color: var(--accent-color);
+  background-color: var(--active-highlight);
+}
+
+.sticker-thumb img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none; /* 드래그 간섭 차단 */
+}
+
+/* 트랙 이름 헤더 호버 시 삭제 아이콘 활성화 */
+.cell-track-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 1. 트랙 헤더 내부 정렬: 왼쪽 밀착 및 간격 제어 */
+.track-header-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;        /* 버튼과 트랙 글자 사이의 일정한 정렬 간격 */
+  padding: 0 16px;  /* 왼쪽 테두리로부터 안정적인 시작 여백 */
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* 트랙 글자 폰트 수평/수직 정렬 매칭 */
+.track-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-color, #e0e0e0);
+  line-height: 1;   /* 폰트 세로 중심 정렬 유지 */
+}
+
+.track-name-text {
+  flex: 1;
+}
+
+/* 앞부분 스타일 코드군 모두 동일 보존 후 아래 선택기 추가 적용 */
+
+/* 스티커 그리드 및 썸네일 보드 스타일군 신설 */
+.sticker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px;
+  background-color: var(--input-bg);
+  box-sizing: border-box;
+}
+
+.sticker-thumb {
+  aspect-ratio: 1/1;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  background-color: #ffffff; /* 투명도 식별을 위한 흰색 배경 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.sticker-thumb:hover, .sticker-thumb.selected-thumb {
+  border-color: var(--accent-color);
+  background-color: var(--active-highlight);
+}
+
+.sticker-thumb img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none; /* 드래그 간섭 차단 */
+}
+
+/* 트랙 이름 헤더 호버 시 삭제 아이콘 활성화 */
+.cell-track-header {
+  position: relative;
+}
+
+.track-header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 5px;
+  box-sizing: border-box;
+}
+
+.track-name-text {
+  flex: 1;
+}
+
+/* 마우스 호버 시에만 슬림하게 나타나는 행 삭제 버튼 */
+.btn-row-delete {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.85rem;
+  padding: 0 4px;
+  display: none;
+}
+
+.timeline-row:hover .btn-row-delete {
+  display: inline-block;
+}
+
+.btn-row-delete:hover {
+  color: var(--danger-color) !important;
+}
+
+/* 글로벌 웹킷 스크롤바 커스텀 스타일 정의 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-muted);
+}
+
+#sidebar::-webkit-scrollbar-track {
+  background-color: var(--sidebar-bg) !important;
+}
+
+#main-content::-webkit-scrollbar-track {
+  background-color: var(--bg-color) !important;
+}
+
+/* =======================================
+              트랙 삭제 버튼
+   ======================================= */
+/* 2. 외곽선과 둥근 회색 배경을 걷어낸 깔끔한 이모지/아이콘 버튼 */
+.btn-track-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;             /* 이전의 동그란 CSS 테두리 제거 */
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: #ff4b4b;           /* 기본 아이콘 컬러 설정 */
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  line-height: 1;
+}
+
+/* 부트스트랩 아이콘 정밀 크기 및 미세 정렬 */
+.btn-track-delete i {
+  font-size: 0.95rem;       /* 폰트 크기와 조화로운 비율로 세팅 */
+  display: inline-block;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+/* 마우스 올렸을 때(Hover) 깔끔한 애니메이션 반사 효과 */
+.btn-track-delete:hover:not(:disabled) {
+  transform: scale(1.15);   /* 외곽선 대신 아이콘이 기분 좋게 살짝 커지는 물리 효과 */
+  opacity: 0.9;
+}
+
+/* 비활성화 시 (트랙 1개만 남았을 때) 무리하게 외곽선이 남지 않고 자연스럽게 감춤 처리 */
+.btn-track-delete:disabled {
+  color: rgba(255, 255, 255, 0.12); /* 다크 테마 배경에 흐릿하게 녹아들도록 처리 */
+  cursor: not-allowed;
+  transform: none;
+}

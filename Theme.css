@@ -1,0 +1,195 @@
+/* ==========================================
+   Theme.css (RyuKwoon MEDIA STUDIO 전용 컬러 테마 모듈)
+   ========================================== */
+
+/* 테마 전환 시 모든 컬러 요소가 0.25초 동안 스르륵 변하는 블렌딩 물리 효과 적용 */
+body, 
+#sidebar, 
+#main-content, 
+#space-card, 
+#timeline-controls, 
+#timeline-card, 
+input, 
+select, 
+button, 
+table, 
+th, 
+td,
+.timeline-table-container,
+.cell-track-header,
+.flat-footer-btn {
+  transition: background-color 0.25s ease, 
+              color 0.25s ease, 
+              border-color 0.25s ease, 
+              box-shadow 0.25s ease;
+}
+
+/* ==========================================
+   반투명 슬라이드 가이드 서랍 창 (Drawer) 스타일 정의
+   ========================================== */
+
+.guide-drawer {
+  position: fixed; top: 0;
+  right: -420px; /* 창 크기(400px) + 그림자 여백만큼 화면 우측 바깥으로 숨김 */
+  width: 400px;
+  height: 100vh;
+  z-index: 2000; /* 프리뷰 캔버스나 타임라인보다 무조건 위에 오도록 설정 */
+  box-sizing: border-box; padding: 25px; display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-shadow: -5px 0 30px rgba(0,0,0,0.15);
+  /* 부드럽게 스르륵 열리는 가속도 모션 텐션 적용 */
+  transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  
+  /* 영롱한 반투명 유리판(Glassmorphism) 효과 구현 */
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* 다크 테마 일 때의 반투명 윈도우 색상 자동 전환 */
+body.dark-theme .guide-drawer {
+  background-color: rgba(21, 23, 38, 0.82);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* 열림(open) 클래스가 부여되면 화면 안으로 안착 */
+.guide-drawer.open {
+  right: 0;
+}
+
+/* 뒷배경 어두운 차단막 */
+.drawer-overlay {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1990; /* 서랍창 바로 아래 레이어 배치 */
+  display: none; opacity: 0; transition: opacity 0.3s ease;
+}
+
+.drawer-overlay.open {
+  display: block;
+  opacity: 1;
+}
+
+/* 서랍창 헤더 영역 */
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 15px;
+}
+
+.drawer-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+/* 서랍창 x 닫기 버튼 */
+.btn-drawer-close {
+  background: none; border: none;
+  color: var(--text-color); cursor: pointer;
+  font-size: 1.5rem; font-weight: bold; outline: none;
+  transition: color 0.2s;
+}
+
+.btn-drawer-close:hover {
+  color: var(--danger-color);
+}
+
+/* 서랍창 스크롤 콘텐츠 본문 */
+.drawer-content {
+  flex: 1;
+  overflow-y: auto;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.drawer-content h4 {
+  margin: 18px 0 6px 0;
+  font-size: 0.95rem;
+  color: var(--accent-color);
+  font-weight: bold;
+}
+
+.drawer-content p {
+  margin: 0 0 12px 0;
+  opacity: 0.85;
+}
+
+/* 모달페이지 */
+.modal {
+    display: none; /* 기본은 숨김 */
+    position: fixed; 
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5); /* 반투명 배경 */
+	z-index: 1000; /* 다른 요소보다 위에 표시되도록 배치 */
+}
+/* 모달 본문 창 */
+.modal-content {
+    background-color: #ffffff; !important; /* 배경을 흰색으로 강제 고정하여 투명도 문제 해결*/
+	color: #1a1a1a !important;            /* 기본 글자색을 어두운 회색/검은색으로 강제 고정 */
+	font-size: 14px;
+	margin: 5% auto; /* 상단 여백을 살짝 조정 */
+	padding: 20px;
+    border-radius: 8px;
+    box-sizing: border-box; /* 패딩이 전체 크기에 영향을 주지 않도록 설정 */
+	/* 1. 가로 사이즈 조절 */
+    width: 90%;            /* 모바일 기기 등을 고려한 기본 너비 */
+    max-width: 500px;      /* PC 화면에서도 너무 넓어지지 않도록 최대 너비 제한 */
+	/* 2. 세로 사이즈 제한 및 스크롤바 활성화 */
+    max-height: 70vh;      /* 브라우저 화면 높이(viewport height)의 70%를 넘지 않도록 제한 */
+    overflow-y: auto;      /* 내용이 max-height를 초과하면 내부 세로 스크롤바 자동 생성 */
+}
+.notice-text {
+  padding-left: 30px;    /* 왼쪽 여백을 줘서 글자가 밀려나게 함 */
+  text-indent: -30px;    /* 첫 줄만 이모지 너비만큼 다시 왼쪽으로 당김 */
+  margin: 0;
+}
+.close { float: right; cursor: pointer; font-size: 24px; }
+
+.rainbow-text {
+  /* 1. 글자 색상을 투명하게 만듭니다 */
+  background: linear-gradient(90deg, #3366ff, #00ccff, #99ffff, #9999ff, #6699ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  
+  /* 2. 배경을 크게 키워서 애니메이션이 부드럽게 흐르게 합니다 */
+  background-size: 200% 100%;
+  animation: rainbow-flow 6s linear infinite;
+}
+
+/* 3. 무지개 배경이 왼쪽에서 오른쪽으로 흐르는 애니메이션 */
+@keyframes rainbow-flow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.rainbow-spin-text {
+  /* 1. 배경을 원형 무지개(conic-gradient)로 설정 */
+  background: conic-gradient(
+    red, orange, green, blue, indigo, violet
+  );
+  
+  /* 2. 글자 모양대로만 배경이 보이게 함 */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  
+  /* 3. 배경 크기를 크게 해서 회전 시 빈 곳이 없게 함 */
+  background-size: 300% 300%;
+  
+  /* 4. 애니메이션 실행 */
+  animation: spin-background 4s linear infinite;
+}
+
+/* 5. 배경의 위치를 바꿔가며 회전 효과 생성 */
+@keyframes spin-background {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
